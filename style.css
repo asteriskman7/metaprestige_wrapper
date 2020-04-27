@@ -1,0 +1,29 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  text-align: center;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.game {
+  padding: 1em;
+  outline: 1px solid black;
+  overflow: auto;
+}
+
