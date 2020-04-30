@@ -22,10 +22,19 @@ class Main {
 class Game {
   constructor(divName) {
     this.div = document.getElementById(divName); 
+    this.divName = divName;
   }
 
   initGUI() {
-    this.div.innerHTML = '<h1>' + this.div.id + '</h1>';
+    let html = '';
+
+    html += `
+<div>
+  <h1><span id='coins_${this.divName}'>0</span> coins</h1>
+  <h3><span id='gain_${this.divName}'>0</span> coins/second</h3>
+`;
+
+    this.div.innerHTML = html; 
   }
 
   strToCap(s) {
@@ -36,28 +45,27 @@ class Game {
 
 }
 
+
 class Prestige extends Game {
-}
+  constructor(divName, meta) {
+    super(divName);
+    this.meta = meta;
+  }
 
-class Prestige2 extends Game {
-}
-
-class Prestige3 extends Game {
-}
-
-class Metaprestige extends Game {
   initGUI() {
-    let html = '';
+    Game.prototype.initGUI.call(this);
+    let html = this.div.innerHTML;
 
     //header
-    html += `
-<div>
-  <h1><span id='coinsM'>0</span> coins</h1>
-  <h3><span id='gainM'>0</span> coins/second</h3>
+
+    if (this.meta) {
+      html += `
   <div><span id='bonus_taken'>0</span>x from other games</div>
   <div><span id='bonus_given'>0</span>x to other games</div>
-</div>
-    `;
+`;
+    }
+
+    html += ` </div> `;
 
     //table header
     const columns = 'Tier,Name,Requirement,Amount,Effect'.split`,`;
@@ -75,7 +83,7 @@ class Metaprestige extends Game {
     pnames.forEach( (n, i) => {
       html += '<tr>';
       html += `<td>${roman[i + 1]}</td>`;
-      html += `<td>${this.strToCap(pnames[i] + 'metaprestige')}</td>`;
+      html += `<td>${this.strToCap(pnames[i] + (this.meta ? 'meta' : '') + 'prestige')}</td>`;
       html += `<td><span id='tier${i+1}costM'>0</span>x Tier ${roman[i]}</td>`;
       html += `<td id='tier${i+1}aM'>0</td>`;
       html += `<td id='tier${i+1}mulM'>x1</td>`;
@@ -89,10 +97,59 @@ class Metaprestige extends Game {
   }
 }
 
+class Prestige2 extends Game {
+  initGUI() {
+    Game.prototype.initGUI.call(this);
+    let html = this.div.innerHTML;
+
+    html += `<table>`;
+
+    for (let row = 0; row < 10; row++) {
+      html += '<tr>';
+
+      for (let col = 0; col < 10; col++) {
+        html += `<td><button id='tier${row}${col}' class='btier'>(${row},${col}) x0</button></td>`;
+      }
+
+      html += '</tr>';
+    }
+
+    html += `</table>`;
+
+    this.div.innerHTML = html;
+  }
+}
+
+class Prestige3 extends Game {
+  initGUI() {
+    Game.prototype.initGUI.call(this);
+    let html = this.div.innerHTML;
+
+    html += `<h3><button id='layer_prev'>-</button>Layer: <span id='layer'>0</span><button id='layer_next'>+</button></h3>`;
+
+
+    html += `<table>`;
+
+    for (let row = 0; row < 10; row++) {
+      html += '<tr>';
+
+      for (let col = 0; col < 10; col++) {
+        html += `<td><button id='tier${row}${col}z' class='btier'>(${row},${col},0) x0</button></td>`;
+      }
+
+      html += '</tr>';
+    }
+
+    html += `</table>`;
+
+    this.div.innerHTML = html;
+  }
+}
+
 const games = [];
 
-games.push(new Metaprestige('game0'));
-games.push(new Prestige('game1'));
+games.push(new Prestige('game0', true));
+games.push(new Prestige('game1', false));
 games.push(new Prestige2('game2'));
 games.push(new Prestige3('game3'));
 
